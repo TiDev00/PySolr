@@ -1,16 +1,42 @@
-# This is a sample Python script.
+import pysolr
+import csv
 
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
+def query_from_file(myFile):
+    # initialize the parameters
+    host = "localhost"
+    port = "8983"
+    core = "test"
+    qt = "select"
+    op = ""
+    sort = "score desc"
+    rows = "1000"
+    fl = "docno,score"
+    df = "text"
 
+    # construct the url
+    url = 'http://' + host + ':' + port + '/solr/' + core
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
+    # construct the query
+    solr = pysolr.Solr(url, search_handler="/" + qt, timeout=5)
 
+    with open(myFile, "r") as f:
+        reader = csv.reader(f, delimiter=";")
+        next(reader, None)
+        for line in reader:
+            q = line[1]
+            results = solr.search(q, **{
+                'q.op': op,
+                'sort': sort,
+                'rows': rows,
+                'fl': fl,
+                'df': df,
+            })
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+            # Number of docs found
+            print(results.hits, "documents found")
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+            # iterate over results
+            for result in results:
+                print(line[0], "\tQ0", result['docno'][0], "{:.5f}".format(result['score']), "\tSTANDARD")
+
+query_from_file("long_q.csv")
