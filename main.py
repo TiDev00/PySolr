@@ -2,15 +2,16 @@ import contextlib
 import pysolr
 import csv
 
+
 def query_from_file(myFile):
     # initialize the parameters
     host = "localhost"
     port = "8983"
     core = "test"
     qt = "select"
-    op = ""
+    op = "OR"
     sort = "score desc"
-    rows = "3"
+    rows = "1000"
     fl = "docno,score"
     df = "text"
 
@@ -18,14 +19,14 @@ def query_from_file(myFile):
     url = 'http://' + host + ':' + port + '/solr/' + core
 
     # construct the query
-    solr = pysolr.Solr(url, search_handler="/" + qt, timeout=5)
+    solr_client = pysolr.Solr(url, search_handler="/" + qt, timeout=5)
 
     with open(myFile, "r") as f:
         reader = csv.reader(f, delimiter=";")
         next(reader, None)
         for line in reader:
             q = line[1]
-            response = solr.search(q, **{
+            response = solr_client.search(q, **{
                 'q.op': op,
                 'sort': sort,
                 'rows': rows,
@@ -41,12 +42,13 @@ def query_from_file(myFile):
 
             # Add the rank key to the docs and print line in trec_eval format
             for document in documents:
-                document.update({'rank': documents.index(document)+1})
+                document.update({'rank': documents.index(document) + 1})
                 # redirect output to a file
                 with open('output.txt', 'a') as external_file:
                     with contextlib.redirect_stdout(external_file):
                         print(line[0], "\tQ0", document['docno'][0], "\t", document['rank'], "\t",
                               "{:.4f}".format(document['score']), "\tSTANDARD")
                 external_file.close()
+
 
 query_from_file("long_q.csv")
