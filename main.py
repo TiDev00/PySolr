@@ -3,7 +3,7 @@ import pysolr
 import csv
 
 
-def query_from_file(myFile):
+def query_from_file(my_file):
     # initialize the parameters
     host = "localhost"
     port = "8983"
@@ -21,7 +21,7 @@ def query_from_file(myFile):
     # construct the query
     solr_client = pysolr.Solr(url, search_handler="/" + qt, timeout=5)
 
-    with open(myFile, "r") as f:
+    with open(my_file, "r") as f:
         reader = csv.reader(f, delimiter=";")
         next(reader, None)
         for line in reader:
@@ -34,8 +34,8 @@ def query_from_file(myFile):
                 'df': df,
             })
 
-            # Number of docs found
-            print(response.hits, "documents found")
+            # Number of docs found for the query
+            print(response.hits, "documents found for query number", line[0])
 
             # Get the docs of the response
             documents = response.docs
