@@ -9,7 +9,7 @@ def query_from_file(myFile):
     port = "8983"
     core = "test"
     qt = "select"
-    op = "OR"
+    op = ""
     sort = "score desc"
     rows = "1000"
     fl = "docno,score"
@@ -47,7 +47,7 @@ def query_from_file(myFile):
                 with open('output.txt', 'a') as external_file:
                     with contextlib.redirect_stdout(external_file):
                         print(line[0], "\tQ0", document['docno'][0], "\t", document['rank'], "\t",
-                              "{:.4f}".format(document['score']), "\tSTANDARD")
+                              "{:.6f}".format(document['score']), "\tSTANDARD")
                 external_file.close()
 
 
