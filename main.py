@@ -11,7 +11,7 @@ def query_from_file(my_file):
     qt = "select"
     op = ""
     sort = "score desc"
-    rows = "1000"
+    rows = "3000"
     fl = "docno,score"
     df = "text"
 
@@ -35,7 +35,7 @@ def query_from_file(my_file):
             })
 
             # Number of docs found for the query
-            print(response.hits, "documents found for query number", line[0])
+            print(response.hits, "documents found for the query number", line[0])
 
             # Get the docs of the response
             documents = response.docs
@@ -51,4 +51,4 @@ def query_from_file(my_file):
                 external_file.close()
 
 
-query_from_file("long_q.csv")
+query_from_file("short_q.csv")
