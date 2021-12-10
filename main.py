@@ -11,7 +11,7 @@ def query_from_file(my_file):
     qt = "select"
     op = ""
     sort = "score desc"
-    rows = "3000"
+    rows = "1000"
     fl = "docno,score"
     df = "text"
 
@@ -51,4 +51,4 @@ def query_from_file(my_file):
                 external_file.close()
 
 
-query_from_file("short_q.csv")
+query_from_file("long_q.csv")
