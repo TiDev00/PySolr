@@ -51,4 +51,4 @@ def query_from_file(my_file):
                 external_file.close()
 
 
-query_from_file("long_q.csv")
+query_from_file("short_q.csv")
