@@ -1,6 +1,12 @@
 import contextlib
+
+import nltk
+import pandas as pd
+from gensim.parsing.preprocessing import remove_stopwords as stopwords
 import pysolr
 import csv
+
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 
 def query_from_file(my_file):
@@ -11,7 +17,7 @@ def query_from_file(my_file):
     qt = "select"
     op = ""
     sort = "score desc"
-    rows = "7"
+    rows = "50"
     query_field = "docno,text"
     query_expansion_field = "docno,score"
     df = "text"
@@ -41,10 +47,35 @@ def query_from_file(my_file):
             # Get the docs of the response
             documents = query_response.docs
 
-            # Extraction of the 5 first docs (top 5)
+            # Extract the 20 first docs (top 20)
             top_docs = []
-            for i in range(5):
-                top_docs.append(documents[i])
+            for index in range(30):
+                top_docs.append(documents[index])
+
+            # Create a dataset for each text
+            for top_doc in top_docs:
+                dataset = []
+
+            # Replace every \n in text and convert all text to Lower Case
+                for text in top_doc['text']:
+                    text = text.replace('\n', ' ')
+                    dataset.append(text.lower())
+
+            # Tokenize the sentences
+                    tokens = nltk.sent_tokenize(dataset[0])
+
+            # Remove stop words
+                    filtered_sentences = []
+                    for sentence in tokens:
+                        filtered_sentences.append(stopwords(sentence))
+
+            # Ponderation of each term in a document
+                    TFIDF = TfidfVectorizer(use_idf=True)
+                    tf_idf = TFIDF.fit_transform(filtered_sentences)
+                    print(tf_idf)
+                    # df = pd.DataFrame(tf_idf[0].T.todense(), index=TFIDF.get_feature_names_out(), columns=["TF-IDF"])
+                    # df = df.sort_values('TF-IDF', ascending=False)
+                    # print(df.head(25))
 
 
 
@@ -59,4 +90,4 @@ def query_from_file(my_file):
             #     external_file.close()
 
 
-query_from_file("duplicate.csv")
+query_from_file("mini_duplicate.csv")
