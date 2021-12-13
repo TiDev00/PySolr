@@ -116,4 +116,6 @@ def searcher(my_file):
             expanded_query(line[0], line[1], words)
 
 
+
+
 searcher("long_q.csv")
