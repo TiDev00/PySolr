@@ -6,5 +6,5 @@ and write all the necessary informations in a .txt file for the evaluation of th
 
 To use the program download the repo, modify the initial parameters and run it
 
-The Pseudo_Relevance_Feature branch contains relevance functionality to increase the precision of
+The Pseudo_Relevance_Feature branch contains pseudo relevance feedback functionality to increase the precision of
 the system.
